@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Polymarket Paper Desk</title>
+<style>
+:root { color-scheme: dark; --bg:#0b0f14; --card:#121821; --border:#1e2a38; --text:#e7eef7; --muted:#8b9bb0; --good:#3dd68c; --bad:#ff6b6b; }
+* { box-sizing: border-box; }
+body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--text); }
+header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; gap:12px; flex-wrap:wrap; align-items:baseline; }
+h1 { font-size:18px; margin:0; font-weight:650; }
+.sub { color:var(--muted); font-size:13px; }
+.banner { margin:16px 24px 0; padding:10px 12px; border:1px solid #5a4a16; background:#2a230e; color:#f0d78c; border-radius:10px; font-size:13px; }
+main { padding:16px 24px 40px; display:grid; gap:16px; }
+.grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; }
+.card h2 { margin:0 0 10px; font-size:13px; color:var(--muted); font-weight:600; letter-spacing:.02em; text-transform:uppercase; }
+.metric { font-size:22px; font-weight:700; }
+.muted { color:var(--muted); font-size:12px; }
+.good { color:var(--good); } .bad { color:var(--bad); }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th, td { text-align:left; padding:8px 6px; border-bottom:1px solid var(--border); vertical-align:top; }
+th { color:var(--muted); font-weight:600; font-size:11px; text-transform:uppercase; }
+.tag { display:inline-block; padding:2px 6px; border-radius:999px; background:#1a2430; color:var(--muted); font-size:11px; }
+.sample { outline:1px dashed #5a4a16; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Polymarket Paper Desk</h1>
+  <div class="sub">Progress board · $10k sim book · Phase 1 paper only</div>
+</header>
+<div class="banner">Some rows are SAMPLE so the board isn’t empty. Real fills replace them once the desk books trades. Refresh this page after updates.</div>
+<main>
+  <section class="grid">
+    <div class="card"><div class="muted">Equity</div><div class="metric">$10,097</div></div>
+    <div class="card"><div class="muted">Cash</div><div class="metric">$9,905</div></div>
+    <div class="card"><div class="muted">Open exposure</div><div class="metric">$168</div></div>
+    <div class="card"><div class="muted">Unrealized</div><div class="metric good">$+24</div></div>
+    <div class="card"><div class="muted">Realized</div><div class="metric good">$+73</div></div>
+    <div class="card"><div class="muted">Daily halt</div><div class="metric">$300</div><div class="muted">max pos $500</div></div>
+  </section>
+  <section class="card">
+    <h2>Open positions</h2>
+    <table><thead><tr><th>Market</th><th>Side</th><th>Shares</th><th>Avg</th><th>Mark</th><th>uPnL</th></tr></thead><tbody>
+    <tr><td>Fed rate cut by Sep 30?</td><td>YES</td><td>400</td><td>0.42</td><td>0.48</td><td class="good">+24.0</td></tr>
+    </tbody></table>
+  </section>
+  <section class="card">
+    <h2>Watchlist</h2>
+    <table><thead><tr><th>Market</th><th>YES</th><th>Resolves</th><th>Note</th></tr></thead><tbody>
+    <tr class="sample"><td>Next CPI YoY print above 3.0%? (SAMPLE)</td><td>0.34</td><td>2026-09-11</td><td>SAMPLE</td></tr>
+    <tr><td>ETH above $4,000 this week?</td><td>0.41</td><td>2026-09-07</td><td>Short resolution crypto</td></tr>
+    </tbody></table>
+  </section>
+  <section class="card">
+    <h2>Strategy scorecard</h2>
+    <table><thead><tr><th>Strategy</th><th>Trades</th><th>Hit</th><th>PnL</th><th>Notes</th></tr></thead><tbody>
+    <tr class="sample"><td>Short-resolution fade</td><td>1</td><td>100%</td><td class="good">+115</td><td>SAMPLE</td></tr>
+    <tr class="sample"><td>Narrative longshots</td><td>1</td><td>0%</td><td class="bad">-42</td><td>SAMPLE</td></tr>
+    <tr><td>Macro binary (desk)</td><td>1</td><td>0%</td><td class="good">+0</td><td>Open Fed cut YES</td></tr>
+    </tbody></table>
+  </section>
+  <section class="card">
+    <h2>Post-mortems</h2>
+    <div class="card sample" style="margin:8px 0"><div><strong>BTC above $100k by Aug 31? (SAMPLE)</strong> <span class="tag">+115</span></div><div class="muted" style="margin-top:6px">Lesson: Short-resolution crypto thresholds reward patience when implied vol is elevated.</div></div>
+    <div class="card sample" style="margin:8px 0"><div><strong>Best Picture upset vs favorite? (SAMPLE)</strong> <span class="tag">-42</span></div><div class="muted" style="margin-top:6px">Lesson: Require a falsifiable edge; otherwise skip.</div></div>
+  </section>
+  <section class="card muted">Public progress board · updated when the desk pushes new book data</section>
+</main>
+</body>
+</html>
