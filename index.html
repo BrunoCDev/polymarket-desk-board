@@ -55,13 +55,17 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 const D=window.DESK||{positions:[],fills:[]};
 document.getElementById('stamp').textContent='Last marked: '+(D.stamp||'—');
 const u=D.unreal||0;
-document.getElementById('metrics').innerHTML=`\n<div class=\"card\"><div class=\"muted\">Equity</div><div class=\"metric\">$$${Math.round(D.equity||0).toLocaleString()}</div></div>\n<div class=\"card\"><div class=\"muted\">Cash</div><div class=\"metric\">$$${Math.round(D.cash||0).toLocaleString()}</div></div>\n<div class=\"card\"><div class=\"muted\">Open exposure</div><div class=\"metric\">$$${Math.round(D.openExp||0).toLocaleString()}</div></div>\n<div class=\"card\"><div class=\"muted\">Unrealized</div><div class=\"metric ${u>=0?'good':'bad'}\">$$${(u>=0?'+':'')+Math.round(u).toLocaleString()}</div></div>`;
+document.getElementById('metrics').innerHTML=`
+<div class="card"><div class="muted">Equity</div><div class="metric">$${Math.round(D.equity||0).toLocaleString()}</div></div>
+<div class="card"><div class="muted">Cash</div><div class="metric">$${Math.round(D.cash||0).toLocaleString()}</div></div>
+<div class="card"><div class="muted">Open exposure</div><div class="metric">$${Math.round(D.openExp||0).toLocaleString()}</div></div>
+<div class="card"><div class="muted">Unrealized</div><div class="metric ${u>=0?'good':'bad'}">$${(u>=0?'+':'')+Math.round(u).toLocaleString()}</div></div>`;
 const posBody=document.getElementById('pos-body');
 (D.positions||[]).forEach(p=>{
   const up=p.shares*(p.markPrice-p.avgPrice);
   const tr=document.createElement('tr');
   tr.className='pos-row'; tr.tabIndex=0;
-  tr.innerHTML=`<td>${esc(p.marketTitle)} <span class=\"chip\">WHY</span></td><td>${esc(p.side)}</td><td>${Math.round(p.shares)}</td><td>${Number(p.avgPrice).toFixed(4)}</td><td>${Number(p.markPrice).toFixed(3)}</td><td class=\"${up>=0?'good':'bad'}\">${up>=0?'+':''}${up.toFixed(1)}</td>`;
+  tr.innerHTML=`<td>${esc(p.marketTitle)} <span class="chip">WHY</span></td><td>${esc(p.side)}</td><td>${Math.round(p.shares)}</td><td>${Number(p.avgPrice).toFixed(4)}</td><td>${Number(p.markPrice).toFixed(3)}</td><td class="${up>=0?'good':'bad'}">${up>=0?'+':''}${up.toFixed(1)}</td>`;
   tr.onclick=()=>openCard(p);
   tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openCard(p);}};
   posBody.appendChild(tr);
@@ -77,8 +81,20 @@ function openCard(p){
   const up=p.shares*(p.markPrice-p.avgPrice);
   const sources=(p.announceSources||[]).map(s=>`<li>${esc(s)}</li>`).join('')||'<li>—</li>';
   const evidence=(p.evidence||[]).map(s=>`<li>${esc(s)}</li>`).join('')||'<li>—</li>';
-  const tags=(p.tags||[]).map(t=>`<span class=\"chip\">${esc(t)}</span>`).join(' ');
-  panel.innerHTML=`<button class=\"close\" type=\"button\" id=\"closeBtn\">Close</button>\n    <h3>${esc(p.marketTitle)}</h3>\n    <div class=\"meta\">BUY ${esc(p.side)} · ${Math.round(p.shares)} sh @ ${Number(p.avgPrice).toFixed(4)} · mark ${Number(p.markPrice).toFixed(3)} · uPnL <span class=\"${up>=0?'good':'bad'}\">${up>=0?'+':''}${up.toFixed(1)}</span></div>\n    <div>${tags}</div>\n    <div class=\"section\"><h4>Thesis / WHY</h4><p>${esc(p.why||'—')}</p></div>\n    <div class=\"section\"><h4>Evidence that drove the decision</h4><ul>${evidence}</ul></div>\n    <div class=\"section\"><h4>Why odds looked wrong</h4><p>${esc(p.whyMispriced||'—')}</p></div>\n    <div class=\"section\"><h4>Falsifier</h4><p>${esc(p.falsifier||'—')}</p></div>\n    <div class=\"section\"><h4>Announce / watch sources</h4><ul>${sources}</ul></div>\n    <div class=\"section\"><h4>Kill plan</h4><p>${esc(p.killPlan||'—')}</p></div>\n    <div class=\"section\"><h4>Size rationale</h4><p>${esc(p.sizeRationale||'—')}</p></div>\n    <div class=\"section\"><h4>Risk notes</h4><p>${esc(p.riskNotes||'—')}</p></div>\n    <div class=\"section\"><h4>IDs</h4><div class=\"kv\"><div class=\"k\">Position</div><div>${esc(p.id)}</div><div class=\"k\">Market</div><div>${esc(p.marketId)}</div><div class=\"k\">Opened</div><div>${esc(p.openedAt)}</div></div></div>`;
+  const tags=(p.tags||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join(' ');
+  panel.innerHTML=`<button class="close" type="button" id="closeBtn">Close</button>
+    <h3>${esc(p.marketTitle)}</h3>
+    <div class="meta">BUY ${esc(p.side)} · ${Math.round(p.shares)} sh @ ${Number(p.avgPrice).toFixed(4)} · mark ${Number(p.markPrice).toFixed(3)} · uPnL <span class="${up>=0?'good':'bad'}">${up>=0?'+':''}${up.toFixed(1)}</span></div>
+    <div>${tags}</div>
+    <div class="section"><h4>Thesis / WHY</h4><p>${esc(p.why||'—')}</p></div>
+    <div class="section"><h4>Evidence that drove the decision</h4><ul>${evidence}</ul></div>
+    <div class="section"><h4>Why odds looked wrong</h4><p>${esc(p.whyMispriced||'—')}</p></div>
+    <div class="section"><h4>Falsifier</h4><p>${esc(p.falsifier||'—')}</p></div>
+    <div class="section"><h4>Announce / watch sources</h4><ul>${sources}</ul></div>
+    <div class="section"><h4>Kill plan</h4><p>${esc(p.killPlan||'—')}</p></div>
+    <div class="section"><h4>Size rationale</h4><p>${esc(p.sizeRationale||'—')}</p></div>
+    <div class="section"><h4>Risk notes</h4><p>${esc(p.riskNotes||'—')}</p></div>
+    <div class="section"><h4>IDs</h4><div class="kv"><div class="k">Position</div><div>${esc(p.id)}</div><div class="k">Market</div><div>${esc(p.marketId)}</div><div class="k">Opened</div><div>${esc(p.openedAt)}</div></div></div>`;
   backdrop.classList.add('open');
   document.getElementById('closeBtn').onclick=()=>backdrop.classList.remove('open');
 }
