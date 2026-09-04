@@ -1,12 +1,89 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta http-equiv="Cache-Control" content="no-cache"/><title>Polymarket Paper Desk</title>
-<style>:root{color-scheme:dark;--bg:#0b0f14;--card:#121821;--border:#1e2a38;--text:#e7eef7;--muted:#8b9bb0;--good:#3dd68c;--bad:#ff6b6b}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text)}header{padding:20px 24px;border-bottom:1px solid var(--border)}h1{font-size:18px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:4px}main{padding:16px 24px 40px;display:grid;gap:16px}.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}.metric{font-size:22px;font-weight:700}.muted{color:var(--muted);font-size:12px}.good{color:var(--good)}.bad{color:var(--bad)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--border)}th{color:var(--muted);font-size:11px;text-transform:uppercase}.stamp{color:var(--muted);font-size:12px;margin-top:8px}</style></head><body>
-<header><h1>Polymarket Paper Desk</h1><div class="sub">Snapshot board — not a live feed. Marks = exit bid.</div><div class="stamp">Last marked: 2026-09-04 19:23 London</div></header>
-<main><section class="grid">
-<div class="card"><div class="muted">Equity</div><div class="metric">$9,887</div></div>
-<div class="card"><div class="muted">Cash</div><div class="metric">$9,024</div></div>
-<div class="card"><div class="muted">Open exposure</div><div class="metric">$952</div></div>
-<div class="card"><div class="muted">Unrealized</div><div class="metric bad">$-89</div></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="Cache-Control" content="no-cache"/>
+<title>Polymarket Paper Desk</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f14;--card:#121821;--border:#1e2a38;--text:#e7eef7;--muted:#8b9bb0;--good:#3dd68c;--bad:#ff6b6b;--accent:#6cb6ff;--overlay:rgba(0,0,0,.65)}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text)}
+header{padding:20px 24px;border-bottom:1px solid var(--border)}h1{font-size:18px;margin:0}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}.stamp{color:var(--muted);font-size:12px;margin-top:8px}
+main{padding:16px 24px 40px;display:grid;gap:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+.metric{font-size:22px;font-weight:700}.muted{color:var(--muted);font-size:12px}
+.good{color:var(--good)}.bad{color:var(--bad)}
+h2.muted{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-size:11px;text-transform:uppercase}
+tr.pos-row{cursor:pointer}tr.pos-row:hover{background:rgba(108,182,255,.08)}
+.hint{color:var(--muted);font-size:12px;margin:8px 0 0}
+.chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:#1a2430;color:var(--muted);margin-right:4px}
+.backdrop{position:fixed;inset:0;background:var(--overlay);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.backdrop.open{display:flex}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;max-width:640px;width:100%;max-height:min(88vh,820px);overflow:auto;padding:20px 22px}
+.panel h3{margin:0 0 4px;font-size:17px;line-height:1.3}.panel .meta{color:var(--muted);font-size:13px;margin-bottom:14px}
+.section{margin-top:14px}.section h4{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.section p,.section li{font-size:14px;line-height:1.45;margin:0}.section ul{margin:0;padding-left:18px}.section li{margin:4px 0}
+.close{float:right;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:13px}.kv .k{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+<h1>Polymarket Paper Desk</h1>
+<div class="sub">Snapshot board — not a live feed. Marks = exit bid. Click a position for the WHY card.</div>
+<div class="stamp" id="stamp"></div>
+</header>
+<main>
+<section class="grid" id="metrics"></section>
+<section class="card"><h2 class="muted">Open positions</h2>
+<table><thead><tr><th>Market</th><th>Side</th><th>Shares</th><th>Avg</th><th>Mark</th><th>uPnL</th></tr></thead><tbody id="pos-body"></tbody></table>
+<p class="hint">Tip: click any row to open the decision card (thesis, evidence, falsifier, kill plan).</p>
 </section>
-<section class="card"><h2 class="muted">Open positions</h2><table><thead><tr><th>Market</th><th>Side</th><th>Shares</th><th>Avg</th><th>Mark (bid)</th><th>uPnL</th></tr></thead><tbody><tr><td>Elon Musk # tweets Sep 3–5: 40–64?</td><td>NO</td><td>510</td><td>0.5877</td><td>0.480</td><td class=bad>-55.0</td></tr><tr><td>Will Trump Insult Mapquest this week?</td><td>YES</td><td>971</td><td>0.0694</td><td>0.050</td><td class=bad>-18.8</td></tr><tr><td>Will OpenAI's Astra model be released by September 4, 2026?</td><td>NO</td><td>440</td><td>0.9094</td><td>0.898</td><td class=bad>-5.0</td></tr><tr><td>Will OpenAI's Astra model be released by September 6, 2026?</td><td>YES</td><td>460</td><td>0.4024</td><td>0.380</td><td class=bad>-10.3</td></tr></tbody></table></section>
-<section class="card"><h2 class="muted">Trade log</h2><table><thead><tr><th>When</th><th>Market</th><th>Action</th><th>Px</th><th>Notional</th><th>Fees</th></tr></thead><tbody><tr><td>2026-09-04 18:23</td><td>Will OpenAI's Astra model be released by September 6, 2026?</td><td>BUY YES</td><td>0.4024</td><td>185</td><td>4.4</td></tr><tr><td>2026-09-04 18:20</td><td>Will OpenAI's Astra model be released by September 4, 2026?</td><td>BUY NO</td><td>0.9094</td><td>400</td><td>1.4</td></tr><tr><td>2026-09-04 17:16</td><td>Will Trump Insult Mapquest this week?</td><td>BUY YES</td><td>0.0694</td><td>67</td><td>3.1</td></tr><tr><td>2026-09-04 16:11</td><td>Elon Musk # tweets Sep 3–5: 40–64?</td><td>BUY NO</td><td>0.5877</td><td>300</td><td>15.0</td></tr></tbody></table></section>
-</main></body></html>
+<section class="card"><h2 class="muted">Trade log</h2>
+<table><thead><tr><th>When</th><th>Market</th><th>Action</th><th>Px</th><th>Notional</th><th>Fees</th></tr></thead><tbody id="fill-body"></tbody></table>
+</section>
+</main>
+<div class="backdrop" id="backdrop" role="dialog" aria-modal="true"><div class="panel" id="panel"></div></div>
+<script src="desk-data.js"></script>
+<script>
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+const D=window.DESK||{positions:[],fills:[]};
+document.getElementById('stamp').textContent='Last marked: '+(D.stamp||'—');
+const u=D.unreal||0;
+document.getElementById('metrics').innerHTML=`\n<div class=\"card\"><div class=\"muted\">Equity</div><div class=\"metric\">$$${Math.round(D.equity||0).toLocaleString()}</div></div>\n<div class=\"card\"><div class=\"muted\">Cash</div><div class=\"metric\">$$${Math.round(D.cash||0).toLocaleString()}</div></div>\n<div class=\"card\"><div class=\"muted\">Open exposure</div><div class=\"metric\">$$${Math.round(D.openExp||0).toLocaleString()}</div></div>\n<div class=\"card\"><div class=\"muted\">Unrealized</div><div class=\"metric ${u>=0?'good':'bad'}\">$$${(u>=0?'+':'')+Math.round(u).toLocaleString()}</div></div>`;
+const posBody=document.getElementById('pos-body');
+(D.positions||[]).forEach(p=>{
+  const up=p.shares*(p.markPrice-p.avgPrice);
+  const tr=document.createElement('tr');
+  tr.className='pos-row'; tr.tabIndex=0;
+  tr.innerHTML=`<td>${esc(p.marketTitle)} <span class=\"chip\">WHY</span></td><td>${esc(p.side)}</td><td>${Math.round(p.shares)}</td><td>${Number(p.avgPrice).toFixed(4)}</td><td>${Number(p.markPrice).toFixed(3)}</td><td class=\"${up>=0?'good':'bad'}\">${up>=0?'+':''}${up.toFixed(1)}</td>`;
+  tr.onclick=()=>openCard(p);
+  tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openCard(p);}};
+  posBody.appendChild(tr);
+});
+const fillBody=document.getElementById('fill-body');
+(D.fills||[]).forEach(f=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${esc((f.ts||'').slice(0,16).replace('T',' '))}</td><td>${esc(f.marketTitle)}</td><td>${esc(f.action)} ${esc(f.side)}</td><td>${Number(f.price).toFixed(4)}</td><td>${Number(f.notional).toFixed(0)}</td><td>${Number(f.fees).toFixed(1)}</td>`;
+  fillBody.appendChild(tr);
+});
+const backdrop=document.getElementById('backdrop'), panel=document.getElementById('panel');
+function openCard(p){
+  const up=p.shares*(p.markPrice-p.avgPrice);
+  const sources=(p.announceSources||[]).map(s=>`<li>${esc(s)}</li>`).join('')||'<li>—</li>';
+  const evidence=(p.evidence||[]).map(s=>`<li>${esc(s)}</li>`).join('')||'<li>—</li>';
+  const tags=(p.tags||[]).map(t=>`<span class=\"chip\">${esc(t)}</span>`).join(' ');
+  panel.innerHTML=`<button class=\"close\" type=\"button\" id=\"closeBtn\">Close</button>\n    <h3>${esc(p.marketTitle)}</h3>\n    <div class=\"meta\">BUY ${esc(p.side)} · ${Math.round(p.shares)} sh @ ${Number(p.avgPrice).toFixed(4)} · mark ${Number(p.markPrice).toFixed(3)} · uPnL <span class=\"${up>=0?'good':'bad'}\">${up>=0?'+':''}${up.toFixed(1)}</span></div>\n    <div>${tags}</div>\n    <div class=\"section\"><h4>Thesis / WHY</h4><p>${esc(p.why||'—')}</p></div>\n    <div class=\"section\"><h4>Evidence that drove the decision</h4><ul>${evidence}</ul></div>\n    <div class=\"section\"><h4>Why odds looked wrong</h4><p>${esc(p.whyMispriced||'—')}</p></div>\n    <div class=\"section\"><h4>Falsifier</h4><p>${esc(p.falsifier||'—')}</p></div>\n    <div class=\"section\"><h4>Announce / watch sources</h4><ul>${sources}</ul></div>\n    <div class=\"section\"><h4>Kill plan</h4><p>${esc(p.killPlan||'—')}</p></div>\n    <div class=\"section\"><h4>Size rationale</h4><p>${esc(p.sizeRationale||'—')}</p></div>\n    <div class=\"section\"><h4>Risk notes</h4><p>${esc(p.riskNotes||'—')}</p></div>\n    <div class=\"section\"><h4>IDs</h4><div class=\"kv\"><div class=\"k\">Position</div><div>${esc(p.id)}</div><div class=\"k\">Market</div><div>${esc(p.marketId)}</div><div class=\"k\">Opened</div><div>${esc(p.openedAt)}</div></div></div>`;
+  backdrop.classList.add('open');
+  document.getElementById('closeBtn').onclick=()=>backdrop.classList.remove('open');
+}
+backdrop.onclick=e=>{if(e.target===backdrop)backdrop.classList.remove('open');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')backdrop.classList.remove('open');});
+</script>
+</body>
+</html>
