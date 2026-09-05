@@ -30,6 +30,7 @@ tr.click-row{cursor:pointer}tr.click-row:hover{background:rgba(108,182,255,.08)}
 .section p,.section li{font-size:14px;line-height:1.45;margin:0}.section ul{margin:0;padding-left:18px}.section li{margin:4px 0}
 .close{float:right;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px}
 .kv{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:13px}.kv .k{color:var(--muted)}
+a.mkt{color:var(--accent);text-decoration:none;font-size:13px}a.mkt:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -50,10 +51,11 @@ tr.click-row{cursor:pointer}tr.click-row:hover{background:rgba(108,182,255,.08)}
 </section>
 </main>
 <div class="backdrop" id="backdrop" role="dialog" aria-modal="true"><div class="panel" id="panel"></div></div>
-<script src="desk-data.js?v=20260905122200"></script>
+<script src="desk-data.js?v=20260905120729"></script>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function listHtml(arr){return (arr&&arr.length)?arr.map(s=>`<li>${esc(s)}</li>`).join(''):'<li>—</li>';}
+function marketLink(o){const u=o.marketUrl||(o.marketSlug?`https://polymarket.com/event/${o.marketSlug}`:'');return u?`<div class="section"><h4>Polymarket</h4><p><a class="mkt" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Open live market ↗</a></p></div>`:'';}
 const D=window.DESK||{positions:[],fills:[]};
 document.getElementById('stamp').textContent='Last marked: '+(D.stamp||'—');
 const u=D.unreal||0;
@@ -75,6 +77,7 @@ function openPosCard(p){
     <h3>${esc(p.marketTitle)}</h3>
     <div class="meta">BUY ${esc(p.side)} · ${Math.round(p.shares)} sh @ ${Number(p.avgPrice).toFixed(4)} · mark ${Number(p.markPrice).toFixed(3)} · uPnL <span class="${up>=0?'good':'bad'}">${up>=0?'+':''}${up.toFixed(1)}</span>${p.mode?` · <span class="chip">${esc(p.mode)}</span>`:''}</div>
     <div>${tags}</div>
+    ${marketLink(p)}
     <div class="section"><h4>Thesis / WHY</h4><p>${esc(p.why||'—')}</p></div>
     <div class="section"><h4>Evidence that drove the decision</h4><ul>${listHtml(p.evidence)}</ul></div>
     <div class="section"><h4>Why odds looked wrong</h4><p>${esc(p.whyMispriced||'—')}</p></div>
@@ -98,6 +101,7 @@ function openFillCard(f){
   panel.innerHTML=`<button class="close" type="button" id="closeBtn">Close</button>
     <h3>${esc(f.marketTitle)}</h3>
     <div class="meta">${esc(f.action)} ${esc(f.side)} · ${Math.round(Number(f.shares)||0)} sh @ ${Number(f.price).toFixed(4)} · notional $${Number(f.notional).toFixed(0)} · ${pnlLine}${f.mode?` · <span class="chip">${esc(f.mode)}</span>`:''}</div>
+    ${marketLink(f)}
     <div class="section"><h4>Rationale / WHY</h4><p>${esc(why)}</p></div>
     ${f.note&&f.note!==why?`<div class="section"><h4>Fill note</h4><p>${esc(f.note)}</p></div>`:''}
     <div class="section"><h4>Exit / kill</h4><p>${esc(f.exitPlan||f.killPlan||f.exitReason||'—')}</p></div>
