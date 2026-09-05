@@ -1,1 +1,1 @@
-LOAD_FROM_FILE:/tmp/desk-content-only.js
+LOAD_FROM_FILE:/tmp/desk-slim.js
