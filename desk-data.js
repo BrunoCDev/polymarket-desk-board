@@ -1,1 +1,1 @@
-PLACEHOLDER
+window.DESK={"stamp":"LOADING"}
