@@ -1,1 +1,1 @@
-PLACEHOLDER_WILL_LOAD
+LOAD_FROM_/workspace/polymarket-board-static/desk-data.js
