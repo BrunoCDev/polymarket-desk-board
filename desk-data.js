@@ -1,1 +1,1 @@
-@/workspace/_push_desk.js
+file:///workspace/_push_desk.js
