@@ -1,1 +1,1 @@
-LOAD_FROM:/tmp/desk-data.js.content
+PLACEHOLDER_WILL_FAIL
