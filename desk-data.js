@@ -1,1 +1,1 @@
-LOAD_FROM_/workspace/mcp_push_ready.json
+PLACEHOLDER_WILL_REPLACE
