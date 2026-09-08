@@ -1,1 +1,1 @@
-PLACEHOLDER_DESK
+LOAD_FROM:/workspace/agent-tools/desk_tiny.js
